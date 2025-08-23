@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BotMessage, Response, Option as OptionType } from '@/lib/types'
-import { Avatar, Button, Flex, Form, Input, Space, Typography } from 'antd'
+import { Avatar, Button, Flex, Form, Input, InputRef, Space, Typography } from 'antd'
 import Option from './Option'
 import Image from 'next/image'
 import bot from '@/assets/chatbot.png'
@@ -18,6 +18,13 @@ type MessageProps = {
 
 export default function Message(props: MessageProps) {
   const [rawInput, setRawInput] = useState<string>('')
+  const inputRef = useRef<InputRef>(null)
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [])
 
   const responseText = useMemo(
     () => {
@@ -50,6 +57,12 @@ export default function Message(props: MessageProps) {
       response: rawInput,
       status: 'sent'
     })
+  }
+
+  const handleRawInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleRawSend()
+    }
   }
 
   return (
@@ -89,7 +102,10 @@ export default function Message(props: MessageProps) {
                           <Form.Item noStyle>
                             <Input
                               value={rawInput}
+                              ref={inputRef}
+                              placeholder="Введите ответ"
                               onChange={e => setRawInput(e.target.value)}
+                              onKeyDown={e => handleRawInputKey(e)}
                             />
                           </Form.Item>
                           <Button onClick={handleRawSend} type="primary"><SendOutlined /></Button>
