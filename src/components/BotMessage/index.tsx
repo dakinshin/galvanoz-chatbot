@@ -67,7 +67,7 @@ export default function Message(props: MessageProps) {
 
   return (
     <div className="bot-message">
-      <Flex gap={50}>
+      <Flex className="top-container">
         <div className="avatar-holder">
           <Avatar icon={<Image src={bot} alt="Bot icon"/>} style={{ backgroundColor: 'white' }} size="large"/>
         </div>
@@ -79,22 +79,24 @@ export default function Message(props: MessageProps) {
 
           {props.message.type === 'prompt' && (
             <div className="input">
-              <Flex justify="end" gap={50}>
+              <Flex justify="end" className="input-container">
                 <div className="controls">
                   {props.response === undefined && (
                     <>
                       {props.message.options && (
-                        <Space className="options">
+                        <Space className="options" wrap>
                           {!props.message.allowInput && (
                             <Typography.Text type="secondary">Выберите вариант ответа:</Typography.Text>
                           )}
                           
-                          {props.message.options?.map(option => (
-                            <Option
-                              option={option} key={option.id}
-                              onSelect={() => handleOptionSelect(option)}
-                            />
-                          ))}
+                          <Space>
+                            {props.message.options?.map(option => (
+                              <Option
+                                option={option} key={option.id}
+                                onSelect={() => handleOptionSelect(option)}
+                              />
+                            ))}
+                          </Space>
                         </Space>
                       )}
                       {props.message.allowInput && (
@@ -104,11 +106,18 @@ export default function Message(props: MessageProps) {
                               value={rawInput}
                               ref={inputRef}
                               placeholder="Введите ответ"
+                              size="large"
                               onChange={e => setRawInput(e.target.value)}
                               onKeyDown={e => handleRawInputKey(e)}
                             />
                           </Form.Item>
-                          <Button onClick={handleRawSend} type="primary"><SendOutlined /></Button>
+
+                          <Button
+                            onClick={handleRawSend}
+                            type="primary"
+                            size="large"
+                            disabled={rawInput.length === 0}
+                          ><SendOutlined /></Button>
                         </Space>
                       )}
                     </>
