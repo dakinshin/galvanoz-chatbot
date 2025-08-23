@@ -1,0 +1,122 @@
+import React, { useMemo, useState } from 'react'
+import { BotMessage, Response, Option as OptionType } from '@/lib/types'
+import { Avatar, Button, Flex, Form, Input, Space, Typography } from 'antd'
+import Option from './Option'
+import Image from 'next/image'
+import bot from '@/assets/chatbot.png'
+import { SendOutlined, UserOutlined } from '@ant-design/icons'
+import { graph } from '../../lib/graph'
+import { LiaCheckSolid } from 'react-icons/lia'
+import { LuCheckCheck } from 'react-icons/lu'
+import './styles.scss'
+
+type MessageProps = {
+  message: BotMessage
+  response: Response | undefined
+  onResponse: (value: Response) => void
+}
+
+export default function Message(props: MessageProps) {
+  const [rawInput, setRawInput] = useState<string>('')
+
+  const responseText = useMemo(
+    () => {
+      if (props.response === undefined) {
+        return undefined
+      }
+
+      const record = graph.find(item => item.id === props.response?.step)
+
+      if (record?.allowInput) {
+        return props.response.response
+      }
+
+      return record?.options?.find(item => item.id === props.response?.response)?.text
+    },
+    [props.response]
+  )
+
+  const handleOptionSelect = (option: OptionType) => {
+    props.onResponse({
+      step: props.message.id,
+      response: option.id,
+      status: 'sent'
+    })
+  }
+
+  const handleRawSend = () => {
+    props.onResponse({
+      step: props.message.id,
+      response: rawInput,
+      status: 'sent'
+    })
+  }
+
+  return (
+    <div className="bot-message">
+      <Flex gap={50}>
+        <div className="avatar-holder">
+          <Avatar icon={<Image src={bot} alt="Bot icon"/>} style={{ backgroundColor: 'white' }} size="large"/>
+        </div>
+
+        <div className="content">
+          <div className="prompt">
+            {props.message.prompt}
+          </div>
+
+          {props.message.type === 'prompt' && (
+            <div className="input">
+              <Flex justify="end" gap={50}>
+                <div className="controls">
+                  {props.response === undefined && (
+                    <>
+                      {props.message.options && (
+                        <Space className="options">
+                          {!props.message.allowInput && (
+                            <Typography.Text type="secondary">Выберите вариант ответа:</Typography.Text>
+                          )}
+                          
+                          {props.message.options?.map(option => (
+                            <Option
+                              option={option} key={option.id}
+                              onSelect={() => handleOptionSelect(option)}
+                            />
+                          ))}
+                        </Space>
+                      )}
+                      {props.message.allowInput && (
+                        <Space>
+                          <Form.Item noStyle>
+                            <Input
+                              value={rawInput}
+                              onChange={e => setRawInput(e.target.value)}
+                            />
+                          </Form.Item>
+                          <Button onClick={handleRawSend} type="primary"><SendOutlined /></Button>
+                        </Space>
+                      )}
+                    </>
+                  )}
+                  {props.response && (
+                    <div className="response">
+                      {responseText}
+                      <div className="status">
+                        {props.response.status === 'sent' && (<LiaCheckSolid color="gray"/>)}
+                        {props.response.status === 'delivered' && (<LuCheckCheck color="gray"/>)}
+                        {props.response.status === 'seen' && (<LuCheckCheck color="#6b75df"/>)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="avatar-holder user-avatar">
+                  <Avatar icon={<UserOutlined/>} size="large"/>
+                </div>
+              </Flex>
+            </div>
+          )}
+        </div>
+      </Flex>
+    </div>
+  )
+}
