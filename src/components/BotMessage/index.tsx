@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BotMessage, Response, Option as OptionType } from '@/lib/types'
-import { Avatar, Button, Flex, Form, Input, InputRef, Space, Typography } from 'antd'
+import { Avatar, Button, Flex, Form, Input, InputRef, Space } from 'antd'
 import Option from './Option'
 import Image from 'next/image'
-import bot from '@/assets/chatbot.png'
 import { SendOutlined, UserOutlined } from '@ant-design/icons'
-import { graph } from '../../lib/graph'
+import { graph } from '@/lib/graph'
+import { nextIdGenerator } from '@/lib/nextId'
 import { LiaCheckSolid } from 'react-icons/lia'
 import { LuCheckCheck } from 'react-icons/lu'
+import bot from '@/assets/chatbot.png'
 import './styles.scss'
 
 type MessageProps = {
@@ -15,6 +16,8 @@ type MessageProps = {
   response: Response | undefined
   onResponse: (value: Response) => void
 }
+
+const nextResponseId = nextIdGenerator()
 
 export default function Message(props: MessageProps) {
   const [rawInput, setRawInput] = useState<string>('')
@@ -32,7 +35,7 @@ export default function Message(props: MessageProps) {
         return undefined
       }
 
-      const record = graph.find(item => item.id === props.response?.step)
+      const record = graph.find(item => item.step === props.response?.step)
 
       if (record?.allowInput) {
         return props.response.response
@@ -43,21 +46,18 @@ export default function Message(props: MessageProps) {
     [props.response]
   )
 
-  const handleOptionSelect = (option: OptionType) => {
+  const sendResponse = (response: string) => {
     props.onResponse({
-      step: props.message.id,
-      response: option.id,
+      id: nextResponseId.next().value,
+      messageId: props.message.id!,
+      step: props.message.step,
+      response,
       status: 'sent'
     })
   }
 
-  const handleRawSend = () => {
-    props.onResponse({
-      step: props.message.id,
-      response: rawInput,
-      status: 'sent'
-    })
-  }
+  const handleOptionSelect = (option: OptionType) => sendResponse(option.id)
+  const handleRawSend = () => sendResponse(rawInput)
 
   const handleRawInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -86,7 +86,7 @@ export default function Message(props: MessageProps) {
                       {props.message.options && (
                         <Space className="options" wrap>
                           {!props.message.allowInput && (
-                            <Typography.Text type="secondary">Выберите вариант ответа:</Typography.Text>
+                            <div className="prompt-hint">Выберите вариант ответа:</div>
                           )}
                           
                           <Space>
@@ -135,7 +135,7 @@ export default function Message(props: MessageProps) {
                 </div>
 
                 <div className="avatar-holder user-avatar">
-                  <Avatar icon={<UserOutlined/>} size="large"/>
+                  <Avatar icon={<UserOutlined/>} size="large" style={{ backgroundColor: 'gray' }}/>
                 </div>
               </Flex>
             </div>

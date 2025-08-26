@@ -14,7 +14,8 @@ type Destination = {
 }
 
 export type BotMessage = {
-  id: StepId
+  id?: number
+  step: StepId
   type: 'prompt' | 'message'
   prompt: string
   options?: Option[]
@@ -27,6 +28,8 @@ export type BotMessage = {
 export type ResponseStatus = 'sent' | 'delivered' | 'seen'
 
 export type Response = {
+  id: number
+  messageId: number
   step: StepId
   response: OptionId
   status: ResponseStatus

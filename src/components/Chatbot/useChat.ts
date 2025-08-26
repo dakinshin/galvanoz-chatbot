@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
-import { graph } from '../../lib/graph'
-import { BotMessage, Response, ResponseStatus, StepId } from '../../lib/types'
+import { BotMessage, Response, ResponseStatus, StepId } from '@/lib/types'
+import { nextIdGenerator } from '@/lib/nextId'
+import { graph } from '@/lib/graph'
 
 class ChatbotException extends Error {}
 class ChatbotGraphItemNotFound extends ChatbotException {}
 class ChatbotUnexpectedResponse extends ChatbotException {}
 
 const THINKING_TIMEOUT = 1000
+
+const nextMessageId = nextIdGenerator()
 
 export const useChat = () => {
   const [responses, setResponses] = useState<Response[]>([])
@@ -15,7 +18,7 @@ export const useChat = () => {
 
   useEffect(() => {
     const getGraphItem = (stepId: StepId, referencedMessageId?: StepId) => {
-      const nextMessage = graph.find(item => item.id === stepId)
+      const nextMessage = graph.find(item => item.step === stepId)
       if (nextMessage === undefined) {
         const location = referencedMessageId ? `mentioned in destination of item ${referencedMessageId} ` : ''
         throw new ChatbotGraphItemNotFound(`Graph item ${stepId} ${location}is not found in the conversation graph`)
@@ -27,14 +30,18 @@ export const useChat = () => {
       setThinking(true)
       setTimeout(
         () => {
-          const newAllMessages = [...allMessages, message]
+          const newMessage = { ...message, id: nextMessageId.next().value }
+          const newAllMessages = [...allMessages, newMessage]
+          console.log('Adding new message', newMessage)
           setMessages(newAllMessages)
           setThinking(false)
 
+          // Если тип сообщения не prompt а message - сразу переходим к следующей команде
           if (message.type === 'message' && message.destinations && message.destinations?.length > 0) {
+            console.log('Self-repeating addMessage')
             const nextStep = message.destinations![0].nextStep
 
-            const nextMessage = getGraphItem(nextStep, message.id)
+            const nextMessage = getGraphItem(nextStep, message.step)
             addMessage(newAllMessages, nextMessage)
           }
         },
@@ -44,8 +51,11 @@ export const useChat = () => {
 
     const lastResponse = responses.length > 0 ? responses[responses.length - 1] : undefined
 
+    console.log('lastResponse', lastResponse)
+
     if (lastResponse) {
-      if (messages.length > 0 && messages[messages.length - 1].id === lastResponse.step) {
+      if (messages.length > 0 && messages[messages.length - 1].step === lastResponse.step) {
+        console.log('useChat: looking for new message')
         const step = getGraphItem(lastResponse.step)
 
         const destination = step?.destinations?.find(item => item.formula(lastResponse.response))
@@ -56,6 +66,8 @@ export const useChat = () => {
         const newMessage = getGraphItem(destination?.nextStep, lastResponse.response)
 
         addMessage(messages, newMessage)
+      } else {
+        console.log('useChat: not looking for new message', messages.length, messages[messages.length - 1].step, lastResponse.step)
       }
     } else if (messages.length === 0) {
       addMessage(messages, graph[0])

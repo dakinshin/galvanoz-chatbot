@@ -2,7 +2,7 @@ import { BotMessage } from './types'
 
 export const graph: BotMessage[] = [
   {
-    id: 'welcome',
+    step: 'welcome',
     type: 'message',
     prompt: 'Здравствуйте! Ответьте на несколько вопросов и я подготовлю для вас экспертное заключение!',
     destinations: [
@@ -13,7 +13,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'gender',
+    step: 'gender',
     type: 'prompt',
     prompt: 'Укажите пол',
     options: [
@@ -28,7 +28,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'doYouHaveProtesis',
+    step: 'doYouHaveProtesis',
     type: 'prompt',
     prompt: 'В полости рта присутствуют металлосодержащие конструкции (коронки, штифты, штифто-культевые вкладки, амальгамовые пломбы, имлантаты, бюгельные протезы)?',
     options: [
@@ -47,7 +47,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'whenInstalled',
+    step: 'whenInstalled',
     type: 'prompt',
     prompt: 'Как давно установлены?',
     allowInput: true,
@@ -59,7 +59,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'metalicInstallationsAddedRecently',
+    step: 'metalicInstallationsAddedRecently',
     type: 'prompt',
     prompt: 'При последнем протезировании добавлялись новые металлосодержащие конструкции?',
     options: [
@@ -74,7 +74,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'doYouFillMetallicTaste',
+    step: 'doYouFillMetallicTaste',
     type: 'prompt',
     prompt: 'Присутствует ли металлический вкус или чувство кислоты в полости рта?',
     options: [
@@ -93,7 +93,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'increasedDuringMeal',
+    step: 'increasedDuringMeal',
     type: 'prompt',
     prompt: 'Металлический вкус усиливается во время еды?',
     options: [
@@ -112,7 +112,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'doYouFillBurning',
+    step: 'doYouFillBurning',
     type: 'prompt',
     prompt: 'Присутствует ли жжение в полости рта?',
     options: [
@@ -131,7 +131,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'doYouFillSalt',
+    step: 'doYouFillSalt',
     type: 'prompt',
     prompt: 'Присутствует ли привкус соленого в полости рта?',
     options: [
@@ -150,7 +150,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'headache',
+    step: 'headache',
     type: 'prompt',
     prompt: 'Присутствуют ли неприятные ощущения, боль в горле?',
     options: [
@@ -169,19 +169,19 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'recommentSurgeonAdvise',
+    step: 'recommentSurgeonAdvise',
     type: 'message',
     prompt: 'Рекомендована консультация хирурга и пародонтолога на предмет исключения заболеваний слюнных желез и заболеваний пародонта',
     final: true
   },
   {
-    id: 'checkYourNose',
+    step: 'checkYourNose',
     type: 'message',
     prompt: 'Рекомендована консультация отоларинголога на предмет исключения заболеваний лор-органов',
     final: true
   },
   {
-    id: 'burningDecreasingDuringMeal',
+    step: 'burningDecreasingDuringMeal',
     type: 'prompt',
     prompt: 'Жжение проходит во время еды?',
     options: [
@@ -200,13 +200,13 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'checkForGlossodynia',
+    step: 'checkForGlossodynia',
     type: 'message',
-    prompt: 'Рекомендована консультация отоларинголога на предмет исключения заболеваний лор-органов',
+    prompt: 'Рекомендована консультация стоматоневролога на предмет исключения глоссодинии',
     final: true
   },
   {
-    id: 'doYouFeelDryMouth',
+    step: 'doYouFeelDryMouth',
     type: 'prompt',
     prompt: 'Присутствует ли сухость в полости рта?',
     options: [
@@ -225,7 +225,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'problemsWithStomach',
+    step: 'problemsWithStomach',
     type: 'prompt',
     prompt: 'Присутствуют симптомы, сопровождающие нарушение работы ЖКТ?',
     options: [
@@ -244,13 +244,13 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'checkYourStomach',
+    step: 'checkYourStomach',
     type: 'message',
     prompt: 'Рекомендована консультация гастроэнтеролога на предмет исключения гастроэзофагальной рефлюксной болезни и других заболеваний ЖКТ',
     final: true
   },
   {
-    id: 'doYouFeelSikAndTired',
+    step: 'doYouFeelSikAndTired',
     type: 'prompt',
     prompt: 'Ощущаете ли вы раздражительность и усталость?',
     options: [
@@ -269,7 +269,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'doYouHaveDiabetes',
+    step: 'doYouHaveDiabetes',
     type: 'prompt',
     prompt: 'Есть ли у Вас диабет?',
     options: [
@@ -288,13 +288,13 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'checkForCandida',
+    step: 'checkForCandida',
     type: 'message',
     prompt: 'Рекомендовано проведение посева на грибы кандида с индификацией микроорганизмов методом времяпролетной МАСС-спектрометрии и определением чувствительности к антимикотическим препаратам на предмет исключения кандидоза',
     final: true
   },
   {
-    id: 'areYouTakingAntibiotics',
+    step: 'areYouTakingAntibiotics',
     type: 'prompt',
     prompt: 'Принимали ли Вы последние пол года антибиотики, гормональные препараты?',
     options: [
@@ -313,7 +313,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'whiteCoatingOnTongue',
+    step: 'whiteCoatingOnTongue',
     type: 'prompt',
     prompt: 'Присутствует ли белый налёт на языке?',
     options: [
@@ -332,7 +332,7 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'painInJaws',
+    step: 'painInJaws',
     type: 'prompt',
     prompt: 'Беспокоит ли височно-нижнечелюстной сустав (боль при жевании, хруст, щелчки сустава)?',
     options: [
@@ -351,13 +351,13 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    id: 'checkYourJaws',
+    step: 'checkYourJaws',
     type: 'message',
     prompt: 'Рекомендована консультация врача стоматолога на предмет исключения заболеваний ВНЧС и гальваноза',
     final: true
   },
   {
-    id: 'checkForGalvanose',
+    step: 'checkForGalvanose',
     type: 'message',
     prompt: 'Рекомедована консультация врача стоматолога-ортопеда на предмет исключения гальваноза',
     final: true

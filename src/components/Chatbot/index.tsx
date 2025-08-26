@@ -30,7 +30,7 @@ export default function Chatbot() {
           <Message
             key={index}
             message={message}
-            response={responses.find(item => item.step === message.id)}
+            response={responses.find(item => item.messageId === message.id)}
             onResponse={handleResponse}
           />
         ))}
