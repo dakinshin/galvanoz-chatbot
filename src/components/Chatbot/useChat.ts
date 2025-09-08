@@ -7,7 +7,7 @@ class ChatbotException extends Error {}
 class ChatbotGraphItemNotFound extends ChatbotException {}
 class ChatbotUnexpectedResponse extends ChatbotException {}
 
-const THINKING_TIMEOUT = 0
+const THINKING_TIMEOUT = 1000
 
 const nextMessageId = nextIdGenerator()
 
