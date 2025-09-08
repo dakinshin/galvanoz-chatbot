@@ -1,3 +1,5 @@
+import { ReactNode } from "react"
+
 type OptionId = string
 
 export type Option = {
@@ -18,8 +20,10 @@ export type BotMessage = {
   step: StepId
   type: 'prompt' | 'message'
   prompt: string
+  payload?: string | ReactNode
+  accent?: boolean
   options?: Option[]
-  allowInput?: true
+  allowInput?: false | 'oneliner' | 'long text'
   destinations?: Destination[]
   final?: true
   answer?: string
@@ -33,4 +37,9 @@ export type Response = {
   step: StepId
   response: OptionId
   status: ResponseStatus
+}
+
+export type Hook = {
+  name: string
+  cb: (message: BotMessage, messages: BotMessage[], responses: Response[]) => Promise<string | ReactNode | undefined>
 }

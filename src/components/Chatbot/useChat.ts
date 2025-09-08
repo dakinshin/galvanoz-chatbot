@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { BotMessage, Response, ResponseStatus, StepId } from '@/lib/types'
+import { useEffect, useRef, useState } from 'react'
+import { BotMessage, Hook, Response, ResponseStatus, StepId } from '@/lib/types'
 import { nextIdGenerator } from '@/lib/nextId'
 import { graph } from '@/lib/graph'
 
@@ -7,14 +7,15 @@ class ChatbotException extends Error {}
 class ChatbotGraphItemNotFound extends ChatbotException {}
 class ChatbotUnexpectedResponse extends ChatbotException {}
 
-const THINKING_TIMEOUT = 1000
+const THINKING_TIMEOUT = 0
 
 const nextMessageId = nextIdGenerator()
 
-export const useChat = () => {
+export const useChat = (hooks: Hook[] = []) => {
   const [responses, setResponses] = useState<Response[]>([])
   const [thinking, setThinking] = useState<boolean>(false)
   const [messages, setMessages] = useState<BotMessage[]>([])
+  const lastMessageStepId = useRef<StepId>(undefined)
 
   useEffect(() => {
     const getGraphItem = (stepId: StepId, referencedMessageId?: StepId) => {
@@ -26,15 +27,24 @@ export const useChat = () => {
       return nextMessage
     }
 
+    const getHook = (name: string) => hooks.find(item => item.name === name)?.cb ?? (() => undefined)
+
     const addMessage = (allMessages: BotMessage[], message: BotMessage) => {
+      lastMessageStepId.current = message.step
       setThinking(true)
+
       setTimeout(
-        () => {
-          const newMessage = { ...message, id: nextMessageId.next().value }
+        async () => {
+          const hookResult = await getHook('before add message')(message, allMessages, responses)
+
+          const newMessage: BotMessage = { ...message, id: nextMessageId.next().value, payload: hookResult }
           const newAllMessages = [...allMessages, newMessage]
+
           console.log('Adding new message', newMessage)
           setMessages(newAllMessages)
+          
           setThinking(false)
+          getHook('after add message')(newMessage, allMessages, responses)
 
           // Если тип сообщения не prompt а message - сразу переходим к следующей команде
           if (message.type === 'message' && message.destinations && message.destinations?.length > 0) {
@@ -63,16 +73,17 @@ export const useChat = () => {
           throw new ChatbotUnexpectedResponse(`Response ${lastResponse.response} has no acceptable next steps`)
         }
 
-        const newMessage = getGraphItem(destination?.nextStep, lastResponse.response)
-
-        addMessage(messages, newMessage)
+        if (destination?.nextStep !== lastMessageStepId.current) {
+          const newMessage = getGraphItem(destination?.nextStep, lastResponse.response)
+          addMessage(messages, newMessage)
+        }
       } else {
         console.log('useChat: not looking for new message', messages.length, messages[messages.length - 1].step, lastResponse.step)
       }
     } else if (messages.length === 0) {
       addMessage(messages, graph[0])
     }
-  }, [responses, messages])
+  }, [responses, messages, hooks])
 
   useEffect(() => {
     const promoteResponseStatus = (stepId: StepId) => {

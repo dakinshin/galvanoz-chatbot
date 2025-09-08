@@ -10,6 +10,7 @@ import { LiaCheckSolid } from 'react-icons/lia'
 import { LuCheckCheck } from 'react-icons/lu'
 import bot from '@/assets/chatbot.png'
 import './styles.scss'
+import TextArea from 'antd/es/input/TextArea'
 
 type MessageProps = {
   message: BotMessage
@@ -59,14 +60,14 @@ export default function Message(props: MessageProps) {
   const handleOptionSelect = (option: OptionType) => sendResponse(option.id)
   const handleRawSend = () => sendResponse(rawInput)
 
-  const handleRawInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleRawInputKey = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {
       handleRawSend()
     }
   }
 
   return (
-    <div className="bot-message">
+    <div className={`bot-message ${props.message.final ? 'final' : ''} ${props.message.accent ? 'accent' : ''}`}>
       <Flex className="top-container">
         <div className="avatar-holder">
           <Avatar icon={<Image src={bot} alt="Bot icon"/>} style={{ backgroundColor: 'white' }} size="large"/>
@@ -75,6 +76,14 @@ export default function Message(props: MessageProps) {
         <div className="content">
           <div className="prompt">
             {props.message.prompt}
+
+            {props.message.payload && (
+              <div className="payload">
+                {typeof props.message.payload === 'string'
+                  ? <>{props.message.payload}</>
+                  : props.message.payload}
+              </div>
+            )}
           </div>
 
           {props.message.type === 'prompt' && (
@@ -84,7 +93,7 @@ export default function Message(props: MessageProps) {
                   {props.response === undefined && (
                     <>
                       {props.message.options && (
-                        <Space className="options" wrap>
+                        <Space className="options" wrap style={{ justifyContent: 'flex-end' }}>
                           {!props.message.allowInput && (
                             <div className="prompt-hint">Выберите вариант ответа:</div>
                           )}
@@ -102,14 +111,25 @@ export default function Message(props: MessageProps) {
                       {props.message.allowInput && (
                         <Space>
                           <Form.Item noStyle>
-                            <Input
-                              value={rawInput}
-                              ref={inputRef}
-                              placeholder="Введите ответ"
-                              size="large"
-                              onChange={e => setRawInput(e.target.value)}
-                              onKeyDown={e => handleRawInputKey(e)}
-                            />
+                            {props.message.allowInput === 'oneliner' && (
+                              <Input
+                                value={rawInput}
+                                ref={inputRef}
+                                placeholder="Введите ответ"
+                                size="large"
+                                onChange={e => setRawInput(e.target.value)}
+                                onKeyDown={e => handleRawInputKey(e)}
+                              />
+                            )}
+                            {props.message.allowInput === 'long text' && (
+                              <TextArea
+                                value={rawInput}
+                                ref={inputRef}
+                                placeholder="Введите ответ"
+                                size="large"
+                                onChange={e => setRawInput(e.target.value)}
+                              />
+                            )}
                           </Form.Item>
 
                           <Button

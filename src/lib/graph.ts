@@ -1,10 +1,12 @@
 import { BotMessage } from './types'
 
+// 🤝
+
 export const graph: BotMessage[] = [
   {
     step: 'welcome',
     type: 'message',
-    prompt: 'Здравствуйте! Ответьте на несколько вопросов и я подготовлю для вас экспертное заключение!',
+    prompt: '👨‍⚕️ Здравствуйте! Ответьте на несколько вопросов и я подготовлю для вас экспертное заключение🦷!',
     destinations: [
       {
         formula: () => true,
@@ -20,6 +22,18 @@ export const graph: BotMessage[] = [
       { id: 'male', text: 'Мужчина' },
       { id: 'female', text: 'Женщина' },
     ],
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'age'
+      }
+    ]
+  },
+  {
+    step: 'age',
+    type: 'prompt',
+    prompt: 'Укажите возраст',
+    allowInput: 'oneliner',
     destinations: [
       {
         formula: () => true,
@@ -50,7 +64,7 @@ export const graph: BotMessage[] = [
     step: 'whenInstalled',
     type: 'prompt',
     prompt: 'Как давно установлены?',
-    allowInput: true,
+    allowInput: 'oneliner',
     destinations: [
       {
         formula: () => true,
@@ -126,7 +140,7 @@ export const graph: BotMessage[] = [
       },
       {
         formula: (input: string) => input === 'no',
-        nextStep: 'doYouFeelDryMouth'
+        nextStep: 'doYouFeelDryMouth2'
       }
     ]
   },
@@ -141,7 +155,7 @@ export const graph: BotMessage[] = [
     destinations: [
       {
         formula: (input: string) => input === 'yes',
-        nextStep: 'recommentSurgeonAdvise' // !
+        nextStep: 'recommendSurgeonAdvise'
       },
       {
         formula: (input: string) => input === 'no',
@@ -169,16 +183,28 @@ export const graph: BotMessage[] = [
     ]
   },
   {
-    step: 'recommentSurgeonAdvise',
+    step: 'recommendSurgeonAdvise',
     type: 'message',
-    prompt: 'Рекомендована консультация хирурга и пародонтолога на предмет исключения заболеваний слюнных желез и заболеваний пародонта',
-    final: true
+    prompt: 'Рекомендована консультация хирурга 👨‍⚕️ и пародонтолога 👨‍⚕️ на предмет исключения заболеваний слюнных желез и заболеваний пародонта',
+    accent: true,
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'report'
+      }
+    ]
   },
   {
     step: 'checkYourNose',
     type: 'message',
-    prompt: 'Рекомендована консультация отоларинголога на предмет исключения заболеваний лор-органов',
-    final: true
+    prompt: 'Рекомендована консультация отоларинголога 👨‍⚕️ на предмет исключения заболеваний лор-органов',
+    accent: true,
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'report'
+      }
+    ]
   },
   {
     step: 'burningDecreasingDuringMeal',
@@ -202,8 +228,14 @@ export const graph: BotMessage[] = [
   {
     step: 'checkForGlossodynia',
     type: 'message',
-    prompt: 'Рекомендована консультация стоматоневролога на предмет исключения глоссодинии',
-    final: true
+    prompt: 'Рекомендована консультация стоматоневролога 👨‍⚕️ на предмет исключения глоссодинии',
+    accent: true,
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'report'
+      }
+    ]
   },
   {
     step: 'doYouFeelDryMouth',
@@ -246,8 +278,14 @@ export const graph: BotMessage[] = [
   {
     step: 'checkYourStomach',
     type: 'message',
-    prompt: 'Рекомендована консультация гастроэнтеролога на предмет исключения гастроэзофагальной рефлюксной болезни и других заболеваний ЖКТ',
-    final: true
+    prompt: 'Рекомендована консультация гастроэнтеролога 👨‍⚕️ на предмет исключения гастроэзофагальной рефлюксной болезни и других заболеваний ЖКТ',
+    accent: true,
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'report'
+      }
+    ]
   },
   {
     step: 'doYouFeelSikAndTired',
@@ -291,7 +329,13 @@ export const graph: BotMessage[] = [
     step: 'checkForCandida',
     type: 'message',
     prompt: 'Рекомендовано проведение посева на грибы кандида с индификацией микроорганизмов методом времяпролетной МАСС-спектрометрии и определением чувствительности к антимикотическим препаратам на предмет исключения кандидоза',
-    final: true
+    accent: true,
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'report'
+      }
+    ]
   },
   {
     step: 'areYouTakingAntibiotics',
@@ -353,13 +397,157 @@ export const graph: BotMessage[] = [
   {
     step: 'checkYourJaws',
     type: 'message',
-    prompt: 'Рекомендована консультация врача стоматолога на предмет исключения заболеваний ВНЧС и гальваноза',
-    final: true
+    prompt: 'Рекомендована консультация врача стоматолога 👨‍⚕️ на предмет исключения заболеваний ВНЧС и гальваноза',
+    accent: true,
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'report'
+      }
+    ]
   },
   {
     step: 'checkForGalvanose',
     type: 'message',
-    prompt: 'Рекомедована консультация врача стоматолога-ортопеда на предмет исключения гальваноза',
+    prompt: 'Рекомедована консультация врача стоматолога-ортопеда 👨‍⚕️ на предмет исключения гальваноза',
+    accent: true,
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'report'
+      }
+    ]
+  },
+  {
+    step: 'doYouFeelDryMouth2',
+    type: 'prompt',
+    prompt: 'Присутствует ли сухость в полости рта?',
+    options: [
+      { id: 'yes', text: 'Да' },
+      { id: 'no', text: 'Нет' },
+    ],
+    destinations: [
+      {
+        formula: (input: string) => input === 'yes',
+        nextStep: 'doYouHaveDiabetes'
+      },
+      {
+        formula: (input: string) => input === 'no',
+        nextStep: 'problemsWithStomach2'
+      }
+    ]
+  },
+  {
+    step: 'problemsWithStomach2',
+    type: 'prompt',
+    prompt: 'Присутствуют симптомы, сопровождающие нарушение работы ЖКТ?',
+    options: [
+      { id: 'yes', text: 'Да' },
+      { id: 'no', text: 'Нет' },
+    ],
+    destinations: [
+      {
+        formula: (input: string) => input === 'yes',
+        nextStep: 'checkYourStomach'
+      },
+      {
+        formula: (input: string) => input === 'no',
+        nextStep: 'doYouFeelSikAndTired2'
+      }
+    ]
+  },
+  {
+    step: 'doYouFeelSikAndTired2',
+    type: 'prompt',
+    prompt: 'Ощущаете ли вы раздражительность и усталость?',
+    options: [
+      { id: 'yes', text: 'Да' },
+      { id: 'no', text: 'Нет' },
+    ],
+    destinations: [
+      {
+        formula: (input: string) => input === 'yes',
+        nextStep: 'checkForGlossodynia'
+      },
+      {
+        formula: (input: string) => input === 'no',
+        nextStep: 'youAreHealthy'
+      }
+    ]
+  },
+  {
+    step: 'youAreHealthy',
+    type: 'message',
+    prompt: '🎉🎉🎉  Вы здоровы!  🎉🎉🎉',
     final: true
   },
+  {
+    step: 'report',
+    type: 'message',
+    prompt: 'Уже готовим для вас заключение...',
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'reportDownload'
+      }
+    ]
+  },
+  {
+    step: 'reportDownload',
+    type: 'message',
+    prompt: 'Скачайте файл:',
+    accent: true,
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'review'
+      }
+    ]
+  },
+  {
+    step: 'review',
+    type: 'prompt',
+    prompt: 'Будем признательны, если оцените, все ли вам понравилось! 🤞🤞🤞',
+    options: [
+      { id: 'Негативно', text: '😬' },
+      { id: 'Не очень', text: '🥴' },
+      { id: 'Нейтрально', text: '😐' },
+      { id: 'Хорошо', text: '😀' },
+      { id: 'Отлично', text: '🤗' },
+    ],
+    destinations: [
+      {
+        formula: (input: string) => input !== 'Отлично',
+        nextStep: 'suggestion'
+      },
+      {
+        formula: (input: string) => input === 'Отлично',
+        nextStep: 'thankyou'
+      }
+    ]
+  },
+  {
+    step: 'thankyou',
+    type: 'message',
+    prompt: 'Спасибо, мы старались! 🤝🤝🤝',
+    final: true
+  },
+  {
+    step: 'suggestion',
+    type: 'prompt',
+    prompt: 'Будем признательны за отзыв. Что можно улучшить?',
+    allowInput: 'long text',
+    destinations: [
+      {
+        formula: () => true,
+        nextStep: 'thankYouForContribution'
+      }
+    ]
+  },
+  {
+    step: 'thankYouForContribution',
+    type: 'message',
+    prompt: 'Спасибо что помогаете нам стать лучше 🤝🤝🤝',
+    final: true
+  }
 ]

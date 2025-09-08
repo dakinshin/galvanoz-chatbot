@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model anamnesis {
+  id              Int       @id @default(autoincrement())
+  uid             Int
+  created         DateTime  @default(now())
+  responses       String    @db.VarChar(2048)
+  recommendation  String    @db.VarChar(50)
+}
