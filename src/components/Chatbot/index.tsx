@@ -1,22 +1,22 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
-import { BotMessage, Hook, Response } from '../../lib/types'
-import Message from '../BotMessage'
-import { useChat } from './useChat'
-import { Button, Flex, Space } from 'antd'
-import ThinkingHint from '../ThinkingHint'
+import Link from 'next/link'
+import { Flex, Space } from 'antd'
 import { FaCloudDownloadAlt, FaFilePdf } from 'react-icons/fa'
+import { BotMessage, Hook, Response } from '../../lib/types'
+import ThinkingHint from '../ThinkingHint'
 import { submit } from '@/lib/submit'
+import { useChat } from './useChat'
+import Message from '../BotMessage'
+// import { generateReport } from './utils'
 import './styles.scss'
-import { generateReport } from './utils'
 
 export default function Chatbot() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleDownload = (anamnesis: any) => {
-    console.log('anamnesis', anamnesis)
-    generateReport(anamnesis.id, anamnesis.created, anamnesis.recommendation, JSON.parse(anamnesis.responses))
-  }
+  // const handleDownload = (anamnesis: any) => {
+  //   console.log('anamnesis', anamnesis)
+  //   generateReport(anamnesis.id, anamnesis.created, anamnesis.recommendation, JSON.parse(anamnesis.responses))
+  // }
 
   const addMessageHook: Hook = {
     name: 'before add message',
@@ -28,7 +28,7 @@ export default function Chatbot() {
         const anamnesis = await submit(responses)
 
         return (
-          <Button type="text" onClick={() => handleDownload(anamnesis)} style={{ color: 'white' }}>
+          <Link href={`/report/${anamnesis.id}`} target="_blank">
             <Flex gap={5} align="center">
               <FaCloudDownloadAlt size={20}/>
               <>ЗАКЛЮЧЕНИЕ</>
@@ -36,7 +36,16 @@ export default function Chatbot() {
                 <FaFilePdf color="#f40f02" size={20}/>
               </div>
             </Flex>
-          </Button>
+          </Link>
+          // <Button type="text" onClick={() => handleDownload(anamnesis)} style={{ color: 'white' }}>
+          //   <Flex gap={5} align="center">
+          //     <FaCloudDownloadAlt size={20}/>
+          //     <>ЗАКЛЮЧЕНИЕ</>
+          //     <div className="icon-wrapper">
+          //       <FaFilePdf color="#f40f02" size={20}/>
+          //     </div>
+          //   </Flex>
+          // </Button>
         )
       }
       return undefined

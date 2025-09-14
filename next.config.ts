@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
         loaders: ['raw-loader'],
         as: '*.js',
       },
+      '*.trie': {
+        loaders: ['transform-loader'],
+        as: '*.trie',
+      },
     },
   },
   experimental: {

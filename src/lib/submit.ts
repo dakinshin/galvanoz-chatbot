@@ -3,7 +3,6 @@
 import { graph } from './graph'
 import { Response } from './types'
 import prisma from './prisma'
-import { TDocumentDefinitions } from 'pdfmake/interfaces'
 
 class UnrecognizedRecommendation extends Error {}
 
@@ -36,4 +35,12 @@ export async function submit(responses: Response[]) {
   console.log('anamnesis id', anamnesis.id)
 
   return anamnesis
+}
+
+export async function load(id: number) {
+  return await prisma.anamnesis.findFirstOrThrow({
+    where: {
+      id
+    }
+  })
 }
