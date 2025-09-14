@@ -113,7 +113,11 @@ export async function generateReport3(anamnesisId: number, created: Date, recomm
   const doc = pdfMake.createPdf(docDefinition, pdfFonts.vfs as any)
 
   return new Promise<string>(resolve => {
-    doc.getBlob(result => resolve(URL.createObjectURL(result)))
+    doc.getBlob(result => {
+      const url = URL.createObjectURL(result)
+      resolve(url)
+      // resolve(`blob:${URL.parse(url.substring(5))?.pathname.substring(1)}`)
+    })
   })
 }
 

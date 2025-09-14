@@ -3,7 +3,7 @@
 import { generateReport3 } from "@/components/Chatbot/utils"
 import { load } from "@/lib/submit"
 import { useQuery } from '@tanstack/react-query'
-import { Flex, Spin } from "antd"
+import { Flex, Space, Spin } from "antd"
 import { useEffect, useState } from "react"
 
 export default function Page(params: { id: number }) {
@@ -28,10 +28,11 @@ export default function Page(params: { id: number }) {
   })
 
   useEffect(() => {
-    if (retreivedUrl) {
+    if (retreivedUrl && url === undefined) {
+      console.log('retreivedUrl', retreivedUrl)
       setUrl(retreivedUrl)
     }
-  }, [retreivedUrl])
+  }, [retreivedUrl, url])
 
   if (url === undefined) {
     return (
@@ -42,6 +43,9 @@ export default function Page(params: { id: number }) {
   }
 
   return (
-    <iframe src={url} style={{ width: '100vw', height: '100vh' }}></iframe>
+    <Space direction="vertical">
+      <>{url}</>
+      <iframe src={url} style={{ width: '100vw', height: '100vh' }}></iframe>
+    </Space>
   )
 }
