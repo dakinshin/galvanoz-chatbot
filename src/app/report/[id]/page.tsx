@@ -5,13 +5,8 @@ import { load } from "@/lib/submit"
 import { useQuery } from '@tanstack/react-query'
 import { Flex, Space, Spin } from "antd"
 import { useEffect, useState } from "react"
-import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist'
 import * as pdfjsLib2 from 'pdfjs-dist'
-// import WebViewer from '@pdftron/pdfjs-express-viewer'
 
-declare global {
-  var [pdfjsLib]: any
-}
 
 export default function Page(params: { id: number }) {
   const [url, setUrl] = useState<string>()
@@ -48,7 +43,6 @@ export default function Page(params: { id: number }) {
       //   // Call APIs here
       // })
 
-      globalThis.pdfjsLib = pdfjsLib2
       const pdfIframe = document.getElementById('pdfIframe') as HTMLIFrameElement
       pdfIframe!.src = `/chatbot/web/viewer.html?file=${retreivedUrl}`
       // pdfIframe!.src = `https://pdfjsdemo.s3.us-east-2.amazonaws.com/web/viewer.html?file=${retreivedUrl}`
