@@ -5,7 +5,7 @@ import { load } from "@/lib/submit"
 import { useQuery } from '@tanstack/react-query'
 import { Flex, Space, Spin } from "antd"
 import { useEffect, useState } from "react"
-import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist'
+// import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist'
 
 export default function Page(params: { id: number }) {
   const [url, setUrl] = useState<string>()
