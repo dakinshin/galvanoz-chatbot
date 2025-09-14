@@ -24,9 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
+      {/* <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      </head>
+        <link rel="stylesheet" href="/chatbot/workers/viewer.css"/>
+      </head> */}
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>
